@@ -24,6 +24,9 @@ import UIKit
 
 class ViewController: UIViewController, ColorSwatchSelectionDelegate {
                             
+  @IBOutlet var tallLayoutConstraints: [NSLayoutConstraint]!
+  @IBOutlet var wideLayoutConstraints: [NSLayoutConstraint]!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
@@ -34,6 +37,19 @@ class ViewController: UIViewController, ColorSwatchSelectionDelegate {
         selector.swatchSelectionDelegate = self
       }
     }
+  }
+  
+  override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    let transitionToWide = size.width > size.height
+    let constraintsToUninstall = transitionToWide ? tallLayoutConstraints : wideLayoutConstraints
+    let constraintsToInstall = transitionToWide ? wideLayoutConstraints : tallLayoutConstraints
+    view.layoutIfNeeded()
+    coordinator.animateAlongsideTransition({ [unowned view = self.view] _ in
+      NSLayoutConstraint.deactivateConstraints(constraintsToUninstall)
+      NSLayoutConstraint.activateConstraints(constraintsToInstall)
+      view.layoutIfNeeded()
+    }, completion: nil)
   }
   
   // #pragma mark <ColorSwatchSelectionDelegate>

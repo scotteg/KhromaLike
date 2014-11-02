@@ -23,13 +23,13 @@
 import UIKit
 import QuartzCore
 
-
 let reuseIdentifier = "ColorSwatchCell"
 
 class ColorSwatchCollectionViewController: UICollectionViewController, ColorSwatchSelector {
   
   var swatchList: ColorSwatchList?
   var swatchSelectionDelegate: ColorSwatchSelectionDelegate?
+  var currentCellContentTransform = CGAffineTransformIdentity
   
   // Lifecycle
   override func viewDidLoad() {
@@ -67,26 +67,56 @@ class ColorSwatchCollectionViewController: UICollectionViewController, ColorSwat
     return cell
   }
   
-  // #pragma mark <UICollectionViewDelegate>
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
+      let minimumDimension = min(CGRectGetHeight(view.bounds), CGRectGetWidth(view.bounds))
+      let newItemSize = CGSize(width: minimumDimension, height: minimumDimension)
+      if flowLayout.itemSize != newItemSize {
+        flowLayout.itemSize = newItemSize
+        flowLayout.invalidateLayout()
+      }
+    }
+  }
+  
+  // MARK: - UICollectionViewDelegate
+  
   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     if let swatch = swatchList?.colorSwatches[indexPath.item] {
       swatchSelectionDelegate?.didSelect(swatch, sender: self)
     }
   }
   
-  // UIViewController
-  override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-    // The orientation only makes a difference on an iphone
-    if(UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-      let newOrientation = UIApplication.sharedApplication().statusBarOrientation
-      if let flowLayout = collectionViewLayout as? UICollectionViewFlowLayout {
-        if newOrientation.isPortrait {
-          flowLayout.scrollDirection = .Horizontal
-        } else {
-          flowLayout.scrollDirection = .Vertical
-        }
-      }
-    }
+  override func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    cell.contentView.transform = currentCellContentTransform
   }
+  
+  // MARK: - UIContentContainer
+  
+  override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    let targetTransform = coordinator.targetTransform()
+    let inverseTransform = CGAffineTransformInvert(targetTransform)
+    coordinator.animateAlongsideTransition({ _ in
+      // Empty
+      }, completion: { [unowned self, unowned view = self.view] _ in
+        view.layer.transform = CATransform3DConcat(view.layer.transform, CATransform3DMakeAffineTransform(inverseTransform))
+        if abs(atan2(Double(targetTransform.b), Double(targetTransform.a)) / M_PI) < 0.9 {
+          view.bounds = CGRect(x: 0.0, y: 0.0, width: CGRectGetHeight(view.bounds), height: CGRectGetWidth(view.bounds))
+        }
+        self.currentCellContentTransform = CGAffineTransformConcat(self.currentCellContentTransform, targetTransform)
+        UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1.0, options: nil, animations: {
+          for cell in self.collectionView.visibleCells() as [UICollectionViewCell] {
+            cell.contentView.transform = self.currentCellContentTransform
+          }
+        }, completion: nil)
+        
+        UIView.animateWithDuration(0.5, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 1.0, options: nil, animations: { // () -> Void in
+          for cell in self.collectionView.visibleCells() as [UICollectionViewCell] {
+            cell.contentView.transform = self.currentCellContentTransform
+          }
+        }, completion: nil)
+    })
+  }
+  
 }
 

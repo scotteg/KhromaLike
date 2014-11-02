@@ -22,6 +22,7 @@
 		2232861A196482610026C074 /* ColorSwatchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22328619196482610026C074 /* ColorSwatchDetailViewController.swift */; };
 		223A316B19694C4D001D6BAD /* NumberFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223A316A19694C4D001D6BAD /* NumberFormatting.swift */; };
 		22D21E3F19C8B4400090A99A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22D21E3E19C8B4400090A99A /* LaunchScreen.xib */; };
+		D2ACD46B1A06672B00C8BC75 /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2ACD46A1A06672B00C8BC75 /* PaddedLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		22328619196482610026C074 /* ColorSwatchDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSwatchDetailViewController.swift; sourceTree = "<group>"; };
 		223A316A19694C4D001D6BAD /* NumberFormatting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberFormatting.swift; sourceTree = "<group>"; };
 		22D21E3E19C8B4400090A99A /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		D2ACD46A1A06672B00C8BC75 /* PaddedLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				223285EF196350FF0026C074 /* Images.xcassets */,
 				223285E6196350FF0026C074 /* Supporting Files */,
 				22D21E3E19C8B4400090A99A /* LaunchScreen.xib */,
+				D2ACD46A1A06672B00C8BC75 /* PaddedLabel.swift */,
 			);
 			path = KhromaLike;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				22328614196361E40026C074 /* ColorSwatchCollectionViewController.swift in Sources */,
 				2232860E196352DC0026C074 /* ColorSwatch.swift in Sources */,
 				2232860C1963526E0026C074 /* Colours.m in Sources */,
+				D2ACD46B1A06672B00C8BC75 /* PaddedLabel.swift in Sources */,
 				223285E9196350FF0026C074 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
